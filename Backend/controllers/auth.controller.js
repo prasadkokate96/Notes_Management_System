@@ -14,8 +14,8 @@ exports.register = async (req, res) => {
       return res.status(400).json({ message: 'All fields are required' });
     }
     
-    if (password.length < 6) {
-      return res.status(400).json({ message: 'Password must be at least 6 characters long' });
+    if (password.length < 8) {
+      return res.status(400).json({ message: 'Password must be at least 8 characters long' });
     }
     
     // Check if user already exists
@@ -67,13 +67,13 @@ exports.login = async (req, res) => {
     console.log('Headers:', JSON.stringify(req.headers));
     console.log('Body Type:', typeof req.body);
     
-    // Check if body is empty object
+    //  we are Checking that  if body is empty object
     if (!req.body || Object.keys(req.body).length === 0) {
       console.log('WARNING: Empty request body received');
       return res.status(400).json({ message: 'Request body is empty' });
     }
     
-    // Make sure email and password are extracted as strings
+    // we Make sure email and password are extracted as strings
     const email = String(req.body.email || '');
     const password = String(req.body.password || '');
     
@@ -126,7 +126,7 @@ exports.login = async (req, res) => {
   }
 };
 
-// Get current user profile
+// Get current user profile  , this also the part of the view 
 exports.getProfile = async (req, res) => {
   try {
     const user = await User.findByPk(req.user.id, {
