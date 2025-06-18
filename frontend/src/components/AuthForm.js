@@ -40,6 +40,7 @@ function AuthForm({ formType, onSubmit, loading, error }) {
           {isLoginForm ? 'Login to Your Account' : 'Create an Account'}
         </h2>
         
+        {/* Display error message if any */}
         {error && (
           <div className="p-3 mb-4 text-sm text-red-700 bg-red-100 rounded-lg" role="alert">
             {error}

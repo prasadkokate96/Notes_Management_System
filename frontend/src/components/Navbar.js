@@ -1,15 +1,34 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
 const Navbar = () => {
   const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
   const handleLogout = async () => {
     await logout();
     navigate('/login');
   };
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !event.target.closest('.profile-dropdown')) {
+        setDropdownOpen(false);
+      }
+    }
+    if (dropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [dropdownOpen]);
 
   return (
     <nav className="bg-gradient-to-r from-purple-600 to-purple-800 shadow-lg">
@@ -23,7 +42,6 @@ const Navbar = () => {
               <span className="ml-2 text-white font-bold text-xl">Notes App</span>
             </Link>
           </div>
-          
           <div className="flex items-center">
             {currentUser ? (
               <div className="flex items-center space-x-4">
@@ -39,20 +57,34 @@ const Navbar = () => {
                 >
                   New Note
                 </Link>
-                <button
-                  onClick={handleLogout}
-                  className="bg-white text-purple-600 hover:bg-gray-100 px-4 py-2 rounded-md text-sm font-medium shadow-sm transition-colors duration-200"
-                >
-                  Sign out
-                </button>
-                <div className="ml-3 relative">
-                  <div className="flex items-center">
-                    <span className="inline-flex items-center justify-center h-8 w-8 rounded-full bg-purple-800 text-white">
-                      <span className="text-sm font-medium leading-none">
-                        {currentUser.username ? currentUser.username.charAt(0).toUpperCase() : 'U'}
-                      </span>
+                {/* Profile icon with dropdown */}
+                <div className="ml-3 relative profile-dropdown" ref={dropdownRef}>
+                  <button
+                    onClick={() => setDropdownOpen((open) => !open)}
+                    className="inline-flex items-center justify-center h-8 w-8 rounded-full bg-purple-800 text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+                    aria-haspopup="true"
+                    aria-expanded={dropdownOpen}
+                  >
+                    <span className="text-sm font-medium leading-none">
+                      {currentUser.username ? currentUser.username.charAt(0).toUpperCase() : 'U'}
                     </span>
-                  </div>
+                  </button>
+                  {dropdownOpen && (
+                    <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
+                      <div className="py-3 px-4 border-b border-gray-200">
+                        <div className="text-xs text-gray-500 mb-1">Signed in as</div>
+                        <div className="text-sm font-medium text-gray-900 truncate">{currentUser.email}</div>
+                      </div>
+                      <div className="py-1">
+                        <button
+                          onClick={handleLogout}
+                          className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 hover:text-red-700"
+                        >
+                          Logout
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             ) : (

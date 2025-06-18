@@ -17,8 +17,7 @@ Note.belongsTo(User, {
 // Sync all models with the database
 async function syncDatabase() {
   try {
-    // Use { force: true } to drop tables and recreate them (CAUTION: all data will be lost)
-    // Use { alter: true } for incremental changes that preserve data when possible
+    
     await sequelize.sync({ alter: true });
     console.log('Database & tables synchronized!');
   } catch (error) {

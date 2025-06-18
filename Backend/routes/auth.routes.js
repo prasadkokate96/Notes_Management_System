@@ -3,7 +3,7 @@ const router = express.Router();
 const authController = require('../controllers/auth.controller');
 const authMiddleware = require('../middlewares/auth.middleware');
 
-// Create simple login route without extra middleware that could interfere
+// below i Create a  simple login route without extra middleware that could interfere
 router.post('/login', authController.login);
 
 // Public routes

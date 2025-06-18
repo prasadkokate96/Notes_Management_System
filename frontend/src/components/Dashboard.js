@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
-import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import axiosInstance from '../utils/api';
 
 function Dashboard() {
@@ -14,12 +12,11 @@ function Dashboard() {
     sort: 'updatedAt',
     order: 'DESC'
   });
-  const { currentUser, logout } = useAuth();
-  const navigate = useNavigate();
 
   // Effect hook to load notes when component mounts and when filters change
   useEffect(() => {
     fetchNotes();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter.category, filter.sort, filter.order]);
 
   const fetchNotes = async () => {
@@ -52,11 +49,6 @@ function Dashboard() {
     setFilter(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
-
   const handleDeleteNote = async (id) => {
     if (window.confirm('Are you sure you want to delete this note?')) {
       try {
@@ -74,15 +66,7 @@ function Dashboard() {
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
           <h1 className="text-2xl font-bold text-gray-800">Notes Dashboard</h1>
-          <div className="flex items-center space-x-4">
-            <span className="text-gray-600">Welcome, {currentUser?.name || currentUser?.email}</span>
-            <button 
-              onClick={handleLogout}
-              className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
-            >
-              Logout
-            </button>
-          </div>
+          {/* User info and logout removed from here; now handled in Navbar */}
         </div>
       </header>
 

@@ -45,7 +45,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// Import database models
+// Import database models 
 const { syncDatabase } = require('./models');
 
 // Simple route for testing
